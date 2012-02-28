@@ -24,12 +24,11 @@ class Task(object):
     
     def __init__(self, function, queue='default', priority=False):
         self._function = function
-        self._name = '{0}.{1}'.format(function.__module__, function.__name__)
+        self._name = '{0}:{1}'.format(function.__module__, function.__name__)
         self._queue = queue
         self._priority = priority
         self._jobs = self._thoonk.job(self._queue)
         _queues.setdefault(queue, {})[self._name] = self
-        print _queues
 
     def __call__(self, *args, **kwargs):
         self._jobs.put(_serialize(self._name, args, kwargs))
