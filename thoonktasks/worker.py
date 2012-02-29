@@ -35,5 +35,24 @@ class Worker(object):
         while True:
             self.work_once(timeout)
 
+
+if __name__ == '__main__':
+    import sys
+
+    def usage():
+        print >> sys.stderr, 'Usage: python -m thoonktasks.worker <tasks_module> [<timeout>]'
+        sys.exit(-1)
+
+    if len(sys.argv) not in (2, 3):
+        usage()
+    module = sys.argv[1]
+    try:
+        timeout = int(sys.argv[2]) if len(sys.argv) == 3 else 0
+    except ValueError:
+        usage()
+
+    __import__(module)
+    Worker(module).work_forever(timeout)
+
 #.............................................................................
 #   worker.py
