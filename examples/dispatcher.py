@@ -1,8 +1,13 @@
+# -*- coding:utf-8 -*-
+# Created by Hans-Thomas on 2012-02-29.
+#=============================================================================
+#   dispatcher.py --- 
+#=============================================================================
 from Queue import Queue
 from functools import partial
 from threading import Thread
 
-from task import Worker
+from thoonktasks.worker import Worker
 
 
 class ParallelWorker(Worker):
@@ -42,3 +47,6 @@ class Dispatcher(object):
 
     def work_forever(self):
         self._stop.get()
+
+#.............................................................................
+#   dispatcher.py

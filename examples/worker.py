@@ -1,5 +1,5 @@
 import hello
-from task import Worker
+from thoonktasks.worker import Worker
 
 
 Worker(hello.__name__).work_forever()
