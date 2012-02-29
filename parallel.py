@@ -1,5 +1,5 @@
-from dispatcher import Dispatcher,  ParallelWorker
 import hello
+from dispatcher import Dispatcher
 
-# ParallelWorker(3).work_forever()
-Dispatcher([('default', 3)]).work_forever()
+
+Dispatcher([(hello.__name__, 3)]).work_forever()

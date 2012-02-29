@@ -1,5 +1,5 @@
 from task import task
 
-@task()
+@task(__name__)
 def hello(you='world'):
     print('Hello {}!'.format(you))

@@ -1,4 +1,5 @@
-from task import Worker
 import hello
+from task import Worker
 
-Worker().work_forever()
+
+Worker(hello.__name__).work_forever()
