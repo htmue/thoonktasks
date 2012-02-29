@@ -23,12 +23,12 @@ class ParallelWorker(Worker):
 
     def worker(self):
         while True:
-            job, dump = self._pipe.get()
-            self._do_job(job, dump)
+            job, request = self._pipe.get()
+            self._do_job(job, request)
             
     def work_once(self, timeout=0):
-        job, dump, _ = self._jobs.get(timeout)
-        self._pipe.put((job, dump))
+        job, request, _ = self._jobs.get(timeout)
+        self._pipe.put((job, request))
 
 
 class Dispatcher(object):

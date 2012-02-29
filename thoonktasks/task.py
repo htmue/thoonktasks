@@ -16,6 +16,8 @@ def task(queue='default', priority=False):
 
 class Task(object):
     _thoonk = Thoonk('127.0.0.1', 6379)
+    _custom_callback = None
+    _custom_errback = None
     
     def __init__(self, function, queue='default', priority=False):
         self._function = function
@@ -27,6 +29,30 @@ class Task(object):
 
     def __call__(self, *args, **kwargs):
         self._jobs.put(_serialize([self._name, args, kwargs]))
+
+    def _callback(self, job, request, result):
+        if self._custom_callback is None:
+            self.default_callback(job, request, result)
+        else:
+            self._custom_callback(self, job, request, result)
+    
+    def _errback(self, job, request, e):
+        if self._custom_errback is None:
+            self.default_errback(job, request, e)
+        else:
+            self._custom_errback(self, job, request, e)
+    
+    def default_callback(self, job, request, result):
+        print job, request, result
+
+    def default_errback(self, job, request, e):
+        print job, request, e
+    
+    def callback(self, function):
+        self._custom_callback = function
+
+    def errback(self, function):
+        self._custom_errback = function
 
 #.............................................................................
 #   task.py
