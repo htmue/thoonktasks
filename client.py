@@ -1,5 +1,7 @@
-from hello import hello
 import sys
+
+from hello import hello
+
 
 hello()
 

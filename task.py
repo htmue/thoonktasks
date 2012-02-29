@@ -6,11 +6,8 @@ from thoonk import Thoonk
 _queues = dict()
 
 
-def _serialize(name, args, kwargs):
-    return json.dumps([name, args, kwargs])
-
-def _deserialize(dump):
-    return json.loads(dump)
+_serialize = json.dumps
+_deserialize = json.loads
 
 
 def task(queue='default', priority=False):
@@ -31,7 +28,7 @@ class Task(object):
         _queues.setdefault(queue, {})[self._name] = self
 
     def __call__(self, *args, **kwargs):
-        self._jobs.put(_serialize(self._name, args, kwargs))
+        self._jobs.put(_serialize([self._name, args, kwargs]))
 
 
 class Worker(object):
@@ -43,6 +40,9 @@ class Worker(object):
         
     def work_once(self, timeout=0):
         job, dump, _ = self._jobs.get(timeout)
+        self._do_job(job, dump)
+
+    def _do_job(self, job, dump):
         self._call(dump)
         self._jobs.finish(job)
 
@@ -52,6 +52,5 @@ class Worker(object):
     
     def _call(self, dump):
         name, args, kwargs = _deserialize(dump)
-        print(name, args, kwargs)
         task = _queues[self._queue][name]
         task._function(*args, **kwargs)

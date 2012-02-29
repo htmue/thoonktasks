@@ -19,8 +19,7 @@ class ParallelWorker(Worker):
     def worker(self):
         while True:
             job, dump = self._pipe.get()
-            self._call(dump)
-            self._jobs.finish(job)
+            self._do_job(job, dump)
             
     def work_once(self, timeout=0):
         job, dump, _ = self._jobs.get(timeout)
