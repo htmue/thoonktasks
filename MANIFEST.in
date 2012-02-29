@@ -1,0 +1,2 @@
+include *.txt *.in *.md UNLICENSE
+recursive-include examples *.py
