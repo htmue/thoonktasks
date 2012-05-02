@@ -3,13 +3,11 @@
 #=============================================================================
 #   worker.py --- 
 #=============================================================================
-from thoonk import Thoonk
-
-from thoonktasks import _queues, _deserialize
+from thoonktasks import _queues, _deserialize, _thoonk
 
 
 class Worker(object):
-    _thoonk = Thoonk('127.0.0.1', 6379)
+    _thoonk = _thoonk
 
     def __init__(self, queue='default'):
         self._queue = queue

@@ -5,7 +5,7 @@
 #=============================================================================
 from thoonk import Thoonk
 
-from thoonktasks import _queues, _serialize
+from thoonktasks import _queues, _serialize, _thoonk
 
 
 def task(queue='default', priority=False):
@@ -15,7 +15,7 @@ def task(queue='default', priority=False):
             
 
 class Task(object):
-    _thoonk = Thoonk('127.0.0.1', 6379)
+    _thoonk = _thoonk
     _custom_callback = None
     _custom_errback = None
     
