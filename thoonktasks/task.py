@@ -3,8 +3,6 @@
 #=============================================================================
 #   task.py --- 
 #=============================================================================
-from thoonk import Thoonk
-
 from thoonktasks import _queues, _serialize, _thoonk
 
 
@@ -53,6 +51,10 @@ class Task(object):
 
     def errback(self, function):
         self._custom_errback = function
+
+    def flush_queue(self):
+        for id in self._jobs.get_ids():
+            self._jobs.retract(id)
 
 #.............................................................................
 #   task.py
