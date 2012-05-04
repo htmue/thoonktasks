@@ -3,7 +3,7 @@
 #=============================================================================
 #   task.py --- 
 #=============================================================================
-from thoonktasks import _queues, _serialize, _thoonk
+from thoonktasks import _queues, BaseObject
 
 
 def task(queue='default', priority=False):
@@ -12,8 +12,7 @@ def task(queue='default', priority=False):
     return task
             
 
-class Task(object):
-    _thoonk = _thoonk
+class Task(BaseObject):
     _custom_callback = None
     _custom_errback = None
     
@@ -26,7 +25,7 @@ class Task(object):
         _queues.setdefault(queue, {})[self._name] = self
 
     def __call__(self, *args, **kwargs):
-        self._jobs.put(_serialize([self._name, args, kwargs]))
+        self._jobs.put(self.serialize([self._name, args, kwargs]))
 
     def _callback(self, job, request, result):
         if self._custom_callback is None:

@@ -3,11 +3,10 @@
 #=============================================================================
 #   worker.py --- 
 #=============================================================================
-from thoonktasks import _queues, _deserialize, _thoonk
+from thoonktasks import _queues, BaseObject
 
 
-class Worker(object):
-    _thoonk = _thoonk
+class Worker(BaseObject):
 
     def __init__(self, queue='default'):
         self._queue = queue
@@ -18,7 +17,7 @@ class Worker(object):
         self._do_job(job, request)
 
     def _do_job(self, job, request):
-        name, args, kwargs = _deserialize(request)
+        name, args, kwargs = self.deserialize(request)
         task = _queues[self._queue][name]
         try:
             result = task._function(*args, **kwargs)
