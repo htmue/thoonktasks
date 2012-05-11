@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Created by Hans-Thomas on 2012-02-29.
 #=============================================================================
-#   task.py --- 
+#   task.py --- Task queue decorator
 #=============================================================================
 from thoonktasks import _queues, BaseObject
 

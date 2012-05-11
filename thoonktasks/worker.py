@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Created by Hans-Thomas on 2012-02-29.
 #=============================================================================
-#   worker.py --- 
+#   worker.py --- Task queue worker
 #=============================================================================
 from thoonktasks import _queues, BaseObject
 
@@ -21,6 +21,11 @@ class Worker(BaseObject):
         task = _queues[self._queue][name]
         try:
             result = task._function(*args, **kwargs)
+        except KeyboardInterrupt, e:
+            self._running = False
+            self._jobs.cancel(job)
+            task._errback(job, request, e)
+            raise KeyboardInterrupt
         except Exception, e:
             self._jobs.retract(job)
             task._errback(job, request, e)
@@ -29,12 +34,13 @@ class Worker(BaseObject):
             task._callback(job, request, result)
 
     def work_forever(self, timeout=0):
-        while True:
+        self._running = True
+        while self._running:
             self.work_once(timeout)
 
 
 if __name__ == '__main__':
-    import sys
+    import os, signal, sys
 
     def usage():
         print >> sys.stderr, 'Usage: python -m thoonktasks.worker <tasks_module> [<timeout>]'
@@ -42,6 +48,11 @@ if __name__ == '__main__':
 
     if len(sys.argv) not in (2, 3):
         usage()
+    
+    def sighandler(signum, frame):
+        os.kill(os.getpid(), signal.SIGINT)
+    signal.signal(signal.SIGTERM, sighandler)
+
     module = sys.argv[1]
     try:
         timeout = int(sys.argv[2]) if len(sys.argv) == 3 else 0
@@ -49,7 +60,11 @@ if __name__ == '__main__':
         usage()
 
     __import__(module)
-    Worker(module).work_forever(timeout)
+    try:
+        print(module)
+        Worker(module).work_forever(timeout)
+    except KeyboardInterrupt:
+        print('exiting')
 
 #.............................................................................
 #   worker.py
