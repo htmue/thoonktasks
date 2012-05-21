@@ -26,8 +26,8 @@ class Worker(BaseObject):
             self._jobs.retract(job)
             self.log.error('deserialization failed:%s:%s', request, e)
         else:
+            task = _queues[self._queue][name]
             try:
-                task = _queues[self._queue][name]
                 result = task._function(*args, **kwargs)
             except KeyboardInterrupt, e:
                 self._running = False
